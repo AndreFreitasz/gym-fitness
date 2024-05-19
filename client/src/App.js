@@ -1,10 +1,11 @@
 import './css/index.css';
+import Login from './pages/login';
 
 function App() {
 
   return (
     <div className="App">
-      <p className='text-white text-center text-4xl font-semibold'>Título</p>
+      <Login />
     </div>
   );
 }

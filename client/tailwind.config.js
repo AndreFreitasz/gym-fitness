@@ -8,6 +8,9 @@ module.exports = {
       },
       fontFamily: {
         'sans': ['Montserrat', 'sans-serif'],
+      },
+      height: {
+        'screen-72': 'calc(100vh - 72px)',
       }
     },
   },
