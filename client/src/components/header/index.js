@@ -20,8 +20,8 @@ function Header({ showTabs }) {
     <animated.header style={headerProps} className=" text-white p-4">
       <div className="flex justify-between items-center mx-7">
         <div>
-          <span className="font-semibold text-4xl text-red-500">Gym</span>
-          <span className="font-semibold text-4xl">Fitness</span>
+          <span className="font-extrabold text-4xl text-red-500">Gym</span>
+          <span className="font-extrabold text-4xl">Fitness</span>
         </div>
 
         {showTabs && (

@@ -1,12 +1,15 @@
 import React from 'react';
-import { useSpring, animated } from 'react-spring';
 import Header from "../components/header";
+import InputField from "../components/forms/InputField";
+import Button from '../components/forms/button';
+import { useSpring, animated } from 'react-spring';
+import { FiUser, FiLock } from 'react-icons/fi';
 
 const Login = () => {
 
   const animationProps = useSpring({
     to: { opacity: 1, transform: 'translate3d(0,0px,0)' },
-    from: { opacity: 0, transform: 'translate3d(0,500px,0)' },
+    from: { opacity: 0, transform: 'translate3d(0,200px,0)' },
     delay: 300
   });
 
@@ -14,41 +17,40 @@ const Login = () => {
     <>
       <Header showTabs={false} />
       <div className="flex justify-center items-center h-screen-72">
-        <animated.form 
-          style={animationProps} 
-          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        <animated.form
+          style={animationProps}
+          className="bg-[#1B2735] shadow rounded-2xl px-8 pt-6 pb-8 mb-4 w-3/4 mx-auto"
         >
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-              Email
-            </label>
-            <input 
-              name="email" 
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-              id="email" 
-              type="email" 
+          <h1 className="text-white text-3xl mb-6 text-center font-bold">Login</h1>
+          <div className="flex flex-row justify-content align-center my-6">
+            <FiUser size={32} className='text-white mx-auto mr-4' />
+            <InputField
+              name="email"
+              id="email"
+              type="email"
               placeholder="Email"
+              className="additional-classes"
             />
           </div>
-          <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-              Senha
-            </label>
-            <input 
-              name="password" 
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" 
-              id="password" 
-              type="password" 
-              placeholder="******************"
+          <div className="flex flex-row justify-content align-center my-6">
+            <FiLock size={32} className='text-white mx-auto mr-4' />
+            <InputField
+              name="password"
+              id="password"
+              type="password"
+              placeholder="Senha"
+              className="additional-classes"
+              autoComplete="current-password"
             />
           </div>
-          <div className="flex items-center justify-between">
-            <button 
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" 
+          <div className="flex items-center justify-between mt-12">
+            <a className="text-red-500 text-md font-medium cursor-pointer hover:opacity-60 transition-opacity duration-200">Não tem uma conta? Se cadastre aqui!</a>
+            <Button
+              className="additional-classes"
               type="submit"
             >
               Entrar
-            </button>
+            </Button>
           </div>
         </animated.form>
       </div>
