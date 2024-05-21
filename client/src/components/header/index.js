@@ -29,7 +29,7 @@ function Header({ showTabs }) {
             <ul className="flex space-x-9 mr-40">
               <li>
                 <a
-                  href="#"
+                  href="https://www.google.com.br/?hl=pt-BR"
                   className="hover:text-red-500 cursor-pointer transition duration-500"
                 >
                   Todos os exercícios
@@ -37,7 +37,7 @@ function Header({ showTabs }) {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="https://www.google.com.br/?hl=pt-BR"
                   className="hover:text-red-500 cursor-pointer transition duration-500"
                 >
                   Meus pesos

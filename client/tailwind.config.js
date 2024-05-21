@@ -11,9 +11,20 @@ module.exports = {
       },
       height: {
         'screen-72': 'calc(100vh - 72px)',
-      }
+      },
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addVariant, e }) {
+      addVariant('autofill', ({ modifySelectors, separator }) => {
+        modifySelectors(({ className }) => {
+          return `.${e(`autofill${separator}${className}`)}:-webkit-autofill,
+            .${e(`autofill${separator}${className}`)}:-webkit-autofill:hover,
+            .${e(`autofill${separator}${className}`)}:-webkit-autofill:focus,
+            .${e(`autofill${separator}${className}`)}:-webkit-autofill:active`;
+        });
+      });
+    },
+  ],
 }
 
