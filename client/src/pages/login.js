@@ -20,7 +20,7 @@ const Login = () => {
       <div className="flex justify-center items-center h-screen-72">
         <animated.form
           style={animationProps}
-          className="bg-[#1B2735] shadow rounded-2xl px-8 pt-6 pb-8 mb-4 w-1/2 mx-auto"
+          className="shadow rounded-2xl px-8 pt-6 pb-8 mb-4 w-full mx-auto sm:w-1/2 lg:bg-[#1B2735]"
         >
           <h1 className="text-white text-3xl mb-6 text-center font-bold">Login</h1>
 
@@ -47,7 +47,7 @@ const Login = () => {
           </div>
           <div className="flex items-center justify-between mt-12">
             <a 
-              href="https://www.google.com.br/?hl=pt-BR"
+              href="/register"
               className="text-red-500 text-md font-medium cursor-pointer hover:opacity-60 transition-opacity duration-500"
             >
               Não tem uma conta? Se cadastre aqui!
