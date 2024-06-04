@@ -6,6 +6,8 @@ import { useSpring, animated } from 'react-spring';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const schema = yup.object().shape({
     name: yup.string().required('Nome é obrigatório'),
@@ -24,11 +26,13 @@ const Register = () => {
         delay: 300
     });
 
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values, { resetForm }) => {
         try {
-            const response = await axios.post('/api/register', values);
-            console.log(response.data);
+            await axios.post('http://localhost:3001/register', values);
+            toast.success("Usuário Cadastrado com sucesso");
+            resetForm();
         } catch (error) {
+            toast.error("Erro ao tentar cadastrar usuário");
             console.error('Houve um erro ao enviar o formulário:', error);
         }
     };
@@ -36,7 +40,7 @@ const Register = () => {
     return (
         <>
             <Header showTabs={false} />
-
+            <ToastContainer position="bottom-right" />
             <div className="flex justify-center items-center h-screen-72">
                 <Formik
                     initialValues={{ name: '', email: '', password: '', confirmPassword: '' }}
@@ -90,7 +94,7 @@ const Register = () => {
                         </div>
                         <div className="flex items-center justify-between mt-12">
                             <a
-                                href="/login"
+                                href="/"
                                 className="text-red-500 text-md font-medium cursor-pointer hover:opacity-60 transition-opacity duration-500"
                             >
                                 Já é cadastrado? Entre na sua conta
