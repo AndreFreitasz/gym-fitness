@@ -1,13 +1,14 @@
 import React from 'react';
 import Header from "../components/header";
-import Button from '../components/forms/button';
-import ValidatedInputField from '../components/forms/validatedInputField';
 import { useSpring, animated } from 'react-spring';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
+import Button from '../components/forms/button';
+import ValidatedInputField from '../components/forms/validatedInputField';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 const schema = yup.object().shape({
     name: yup.string().required('Nome é obrigatório'),
@@ -19,6 +20,7 @@ const schema = yup.object().shape({
 const Register = () => {
 
     const AnimatedForm = animated(Form);
+    const navigate = useNavigate();
 
     const animationProps = useSpring({
         to: { opacity: 1, transform: 'translate3d(0,0px,0)' },
@@ -28,9 +30,10 @@ const Register = () => {
 
     const handleSubmit = async (values, { resetForm }) => {
         try {
-            await axios.post('http://localhost:3001/register', values);
-            toast.success("Usuário Cadastrado com sucesso");
+            //envie a url correta para o axios.post
+            await axios.post('http://localhost:3001/postUsers', values);
             resetForm();
+            navigate('/');
         } catch (error) {
             toast.error("Erro ao tentar cadastrar usuário");
             console.error('Houve um erro ao enviar o formulário:', error);
