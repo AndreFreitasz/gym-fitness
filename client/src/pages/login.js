@@ -6,6 +6,7 @@ import { useSpring, animated } from 'react-spring';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -17,6 +18,7 @@ const schema = yup.object().shape({
 const Login = () => {
 
   const AnimatedForm = animated(Form);
+  const navigate = useNavigate();
 
   const animationProps = useSpring({
     to: { opacity: 1, transform: 'translate3d(0,0px,0)' },
@@ -24,14 +26,21 @@ const Login = () => {
     delay: 300
   });
 
-  const handleSubmit = async (values, { resetForm }) => {
+  const handleSubmit = async (values) => {
     try {
-      await axios.post('http://localhost:3001/register', values);
-      toast.success("Usuário Cadastrado com sucesso");
-      resetForm();
+      const response = await axios.post('http://localhost:3001/login', values);
+      const { data } = response;
+      console.log(data)
+      localStorage.setItem('user', data.token);
+      navigate('/home'); 
+
     } catch (error) {
-      toast.error("Erro ao tentar cadastrar usuário");
-      console.error('Houve um erro ao enviar o formulário:', error);
+
+      if (error.response && error.response.status === 401) {
+        toast.error('Usuário ou senha incorretos');
+      } else {
+        toast.error('Erro ao processar o login');
+      }
     }
   };
 
@@ -76,7 +85,7 @@ const Login = () => {
                 href="/register"
                 className="text-red-500 text-md font-medium cursor-pointer hover:opacity-60 transition-opacity duration-500"
               >
-                Já é cadastrado? Entre na sua conta
+                Não tem uma conta? Se cadastre aqui
               </a>
               <Button
                 className="additional-classes"

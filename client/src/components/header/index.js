@@ -1,5 +1,5 @@
 import { useSpring, animated, useChain, config, useSpringRef } from 'react-spring';
-import { PiUserCircleLight  } from 'react-icons/pi';
+import { FaUser } from "react-icons/fa";
 import React from 'react';
 import '../../css/index.css';
 
@@ -20,17 +20,17 @@ function Header({ showTabs }) {
     <animated.header style={headerProps} className=" text-white p-4">
       <div className="flex justify-between items-center mx-7">
         <div>
-          <span className="font-extrabold text-4xl text-red-500">Gym</span>
-          <span className="font-extrabold text-4xl">Fitness</span>
+          <span className="font-extrabold text-5xl text-red-500">Gym</span>
+          <span className="font-extrabold text-5xl">Fitness</span>
         </div>
 
         {showTabs && (
           <>
-            <ul className="flex space-x-9 mr-40">
+            <ul className="flex space-x-9 mr-60">
               <li>
                 <a
                   href="https://www.google.com.br/?hl=pt-BR"
-                  className="hover:text-red-500 cursor-pointer transition duration-500"
+                  className="hover:text-red-500 text-lg cursor-pointer transition duration-500 font-semibold"
                 >
                   Todos os exercícios
                 </a>
@@ -38,13 +38,13 @@ function Header({ showTabs }) {
               <li>
                 <a
                   href="https://www.google.com.br/?hl=pt-BR"
-                  className="hover:text-red-500 cursor-pointer transition duration-500"
+                  className="hover:text-red-500 text-lg cursor-pointer transition duration-500 font-semibold"
                 >
                   Meus pesos
                 </a>
               </li>
             </ul>
-            <PiUserCircleLight size={40} />
+            <FaUser size={38} className='cursor-pointer' />
           </>
         )}
       </div>

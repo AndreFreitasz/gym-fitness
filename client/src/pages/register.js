@@ -4,11 +4,11 @@ import { useSpring, animated } from 'react-spring';
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
 import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
 import Button from '../components/forms/button';
 import ValidatedInputField from '../components/forms/validatedInputField';
-import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const schema = yup.object().shape({
     name: yup.string().required('Nome é obrigatório'),

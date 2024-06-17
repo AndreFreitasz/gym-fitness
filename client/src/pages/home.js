@@ -1,8 +1,10 @@
+import Header from "../components/header";
+
 const Home = () => {
 
   return (
     <>
-     <h1>Teste</h1>
+    <Header showTabs={true} />
     </>
   );
 }

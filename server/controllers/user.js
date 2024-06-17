@@ -21,7 +21,10 @@ async function emailExists(email) {
 }
 
 export const postUsers = async (req, res) => {
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const name = req.body.name;
+    const email = req.body.email;
+    const password = req.body.password;
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
 
@@ -34,8 +37,8 @@ export const postUsers = async (req, res) => {
             const sql = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
             db.query(sql,
                 [
-                    req.body.name,
-                    req.body.email,
+                    name,
+                    email,
                     hashedPassword
                 ],
                 (err, result) => err ? reject(err) : resolve(result)
