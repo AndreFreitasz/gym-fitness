@@ -30,13 +30,15 @@ const Register = () => {
 
     const handleSubmit = async (values, { resetForm }) => {
         try {
-            //envie a url correta para o axios.post
             await axios.post('http://localhost:3001/postUsers', values);
             resetForm();
             navigate('/');
         } catch (error) {
-            toast.error("Erro ao tentar cadastrar usuário");
-            console.error('Houve um erro ao enviar o formulário:', error);
+            if (error.response && error.response.data.message) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error("Erro ao tentar cadastrar usuário");
+            }
         }
     };
 
