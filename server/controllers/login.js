@@ -7,9 +7,10 @@ dotenv.config({ path: '../database.env' });
 // Função para gerar o token JWT
 function generateToken(user) {
     const { password, ...userInfoWithoutPassword } = user;
+    const sercretKey = "abcdefghijklmnopqrstuvwxyz";
     const token = jwt.sign(
         { userId: userInfoWithoutPassword.id, email: userInfoWithoutPassword.email },
-        process.env.JWT_SECRET,
+        sercretKey,
         { expiresIn: '3h' }
     );
     return token;
@@ -27,10 +28,17 @@ export const login = async (req, res) => {
             );
         });
 
+        if (results.length === 0) {
+            console.log("Usuário não encontrado");
+            res.status(401).json({ message: "Usuário ou senha inválidos" });
+            return;
+        }
+
         const user = results[0];
         const validPassword = await bcrypt.compare(password, user.password);
 
-        if (results.length === 0 || !validPassword) {
+        if (!validPassword) {
+            console.log("Senha inválida");
             res.status(401).json({ message: "Usuário ou senha inválidos" });
             return;
         }
@@ -42,6 +50,10 @@ export const login = async (req, res) => {
             token
         });
     } catch (error) {
-        res.status(500).json({ message: "Erro ao processar o login." });
+        console.error("Erro ao processar o login:", error);
+        res.status(500).json({ 
+            message: "Erro ao processar o login.",
+            error: error.message
+        });
     }
 };

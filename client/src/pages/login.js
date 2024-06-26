@@ -68,7 +68,7 @@ const Login = () => {
                 id="email"
                 type="email"
                 placeholder="Email"
-                className="additional-classes"
+                className="additional- asses"
               />
             </div>
             <div className="flex flex-col justify-content align-center my-6">
