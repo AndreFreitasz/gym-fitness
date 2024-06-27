@@ -1,35 +1,49 @@
 import https from 'https';
+import path from 'path';
 
-export function exercises(req, res) {
-    const options = {
-        method: 'GET',
-        hostname: 'exercisedb.p.rapidapi.com',
-        port: null,
-        path: '/exercises', 
-        headers: {
-            'x-rapidapi-key': '57e7fc9d61mshccb4c5c5118b7adp1df1fcjsn3e9cbefe01b9',
-            'x-rapidapi-host': 'exercisedb.p.rapidapi.com'
-        }
+const fetchJson = (options) => new Promise((resolve, reject) => {
+    const req = https.request(options, (res) => {
+        let data = '';
+        res.on('data', (chunk) => data += chunk);
+        res.on('end', () => resolve(JSON.parse(data)));
+    });
+    req.on('error', (e) => reject(e));
+    req.end();
+});
+
+const exercisesByBodyPart = async (bodyPart, baseOptions) => {
+    const encodedBodyPart = encodeURIComponent(bodyPart);
+    const exercisesOptions = {
+        ...baseOptions,
+        path: `/exercises/bodyPart/${encodedBodyPart}?limit=20`
     };
+    return await fetchJson(exercisesOptions);
+};
 
-    const reqApi = https.request(options, function (resApi) {
-        let chunks = [];
+export const exercises = async (req, res) => {
+    try {
+        const bodyPartsOptions = {
+            method: 'GET',
+            hostname: 'exercisedb.p.rapidapi.com',
+            path: '/exercises/bodyPartList',
+            headers: {
+                'x-rapidapi-key': '57e7fc9d61mshccb4c5c5118b7adp1df1fcjsn3e9cbefe01b9',
+                'x-rapidapi-host': 'exercisedb.p.rapidapi.com'
+            }
+        };
+        const bodyParts = await fetchJson(bodyPartsOptions);
+        const results = {};
 
-        resApi.on('data', function (chunk) {
-            chunks.push(chunk);
+        for (const bodyPart of bodyParts) {
+            const exercises = await exercisesByBodyPart(bodyPart, bodyPartsOptions);
+            results[bodyPart] = { exercises };
+        }
+
+        res.json(results);
+    } catch (error) {
+        res.status(500).json({ 
+            message: "Erro ao processar a requisição.",
+            error: error.message
         });
-
-        resApi.on('end', function () {
-            const body = Buffer.concat(chunks);
-            const data = JSON.parse(body.toString());
-            res.json(data); 
-        });
-    });
-
-    reqApi.on('error', function (error) {
-        console.error('Erro ao consumir a API exerciseDB:', error);
-        res.status(500).send('Internal Server Error');
-    });
-
-    reqApi.end();
-}
+    }
+};

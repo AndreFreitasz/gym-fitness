@@ -28,17 +28,11 @@ export const login = async (req, res) => {
             );
         });
 
-        if (results.length === 0) {
-            console.log("Usuário não encontrado");
-            res.status(401).json({ message: "Usuário ou senha inválidos" });
-            return;
-        }
-
         const user = results[0];
         const validPassword = await bcrypt.compare(password, user.password);
 
-        if (!validPassword) {
-            console.log("Senha inválida");
+        if (!validPassword || results.length === 0) {
+            console.log("Usuário não encontrado");
             res.status(401).json({ message: "Usuário ou senha inválidos" });
             return;
         }
