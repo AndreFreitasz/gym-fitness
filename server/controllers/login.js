@@ -4,7 +4,6 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config({ path: '../database.env' });
 
-// Função para gerar o token JWT
 function generateToken(user) {
     const { password, ...userInfoWithoutPassword } = user;
     const sercretKey = "abcdefghijklmnopqrstuvwxyz";

@@ -12,6 +12,15 @@ module.exports = {
       height: {
         'screen-72': 'calc(100vh - 72px)',
       },
+      keyframes: {
+        bounce: {
+          '0%, 100%': { transform: 'translateY(-25%)', animationTimingFunction: 'cubic-bezier(0.68, -0.55, 0.27, 1.55)' },
+          '50%': { transform: 'translateY(0)', animationTimingFunction: 'linear' },
+        },
+      },
+      animation: {
+        bounce: 'bounce 2s infinite', // Aumentando a duração para 2 segundos
+      },
     },
   },
   plugins: [

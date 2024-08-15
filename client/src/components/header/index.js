@@ -17,12 +17,12 @@ function Header({ showTabs }) {
   useChain([headerRef], [0]);
 
   return (
-    <animated.header style={headerProps} className=" text-white p-4">
+    <animated.header style={headerProps} className=" text-white p-4 mb-4">
       <div className="flex justify-between items-center mx-7">
-        <div>
-          {/* <span className="font-extrabold text-5xl text-red-500">Gym</span>
-          <span className="font-extrabold text-5xl">Fitness</span> */}
-        </div>
+        {/* <div>
+          <span className="font-extrabold text-5xl text-red-500">Gym</span>
+          <span className="font-extrabold text-5xl">Fitness</span>
+        </div> */}
 
         {showTabs && (
           <>
@@ -32,15 +32,7 @@ function Header({ showTabs }) {
                   href="https://www.google.com.br/?hl=pt-BR"
                   className="hover:text-red-500 text-lg cursor-pointer transition duration-500 font-semibold"
                 >
-                  Todos os exercícios
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.google.com.br/?hl=pt-BR"
-                  className="hover:text-red-500 text-lg cursor-pointer transition duration-500 font-semibold"
-                >
-                  Meus pesos
+                  Home
                 </a>
               </li>
             </ul>
