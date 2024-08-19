@@ -31,7 +31,7 @@ const Login = () => {
       const response = await axios.post('http://localhost:3001/login', values);
       const { data } = response;
       localStorage.setItem('user', data.token);
-      navigate('/home'); 
+      navigate('/exercises'); 
 
     } catch (error) {
 

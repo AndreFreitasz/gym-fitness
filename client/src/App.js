@@ -2,7 +2,7 @@ import './css/index.css';
 import { BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom';
 import Login from './pages/login';
 import Register from './pages/register';
-import Home from './pages/home';
+import Exercises from './pages/exercises';
 
 const PrivateRoute = ({ children }) => {
   const userLoggedIn = Boolean(localStorage.getItem('user'));
@@ -17,7 +17,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/home" element={<PrivateRoute> <Home /> </PrivateRoute>} />
+        <Route path="/exercises" element={<PrivateRoute> <Exercises /> </PrivateRoute>} />
       </Routes>
     </Router>
   );
