@@ -8,3 +8,25 @@ body {
     @apply bg-background;
     @apply font-sans;
 }
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #a0aec0; 
+    border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #718096; 
+}

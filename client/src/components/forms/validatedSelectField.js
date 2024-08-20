@@ -70,7 +70,7 @@ const ValidatedSelectField = ({ placeholder, url, className, label, id, ...props
         options={options}
         onChange={handleChange}
         placeholder={placeholder || 'Selecione o grupo muscular do exercício'}
-        value={options.find(option => option.value === field.value)}
+        value={options.find(option => option.value === field.value) || ''}
         classNamePrefix="react-select"
         styles={customStyles}
       />
