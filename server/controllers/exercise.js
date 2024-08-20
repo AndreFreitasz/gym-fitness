@@ -49,8 +49,24 @@ export const postExercises = async (req, res) => {
             );
         });
 
-        const result = await queryPromise;
+        await queryPromise;
         res.status(200).json({ message: "Exercício foi cadastrado com sucesso!" });
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+}
+
+export const deleteExercises = async (req, res) => {
+    const id = req.body.id;
+
+    try {
+        const queryPromise = new Promise((resolve, reject) => {
+            const sql = "DELETE FROM exercises WHERE id = ?";
+            db.query(sql, [id], (err, result) => err ? reject(err) : resolve(result));
+        });
+
+        await queryPromise;
+        res.status(200).json({ message: "Exercício deletado com sucesso!" });
     } catch (err) {
         res.status(400).json({ message: err.message });
     }

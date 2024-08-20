@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
+import { FaTrash } from "react-icons/fa";
+import { useSpring, animated } from 'react-spring';
 import Header from "../components/header/index.js";
 import Title from "../components/title/index.js";
 import Button from "../components/forms/button.js";
 import ValidatedInputField from "../components/forms/validatedInputField.js";
-import { useSpring, animated } from 'react-spring';
+import ValidatedSelectField from "../components/forms/validatedSelectField.js";
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
 import axios from 'axios';
+import Swal from 'sweetalert2'; 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ValidatedSelectField from "../components/forms/validatedSelectField.js";
+
 
 
 const schema = yup.object().shape({
@@ -19,6 +22,7 @@ const schema = yup.object().shape({
 
 const Exercises = () => {
   const AnimatedForm = animated(Form);
+  const [message, setMessage] = useState('');
   const [exercises, setExercises] = useState([]);
 
   const animationProps = useSpring({
@@ -27,17 +31,22 @@ const Exercises = () => {
     delay: 300
   });
 
-  const fetchExercises = async () => {
+  const searchExercises = async () => {
     try {
       const response = await axios.get('http://localhost:3001/searchExercises');
-      setExercises(response.data.message);
+      if (response.data.message.length > 0) {
+        setExercises(response.data.message);
+        setMessage('');
+      } else {
+        setMessage('Nenhum exercício cadastrado!');
+      }
     } catch (error) {
       console.error("Erro ao buscar dados: ", error);
     }
   };
 
   useEffect(() => {
-    fetchExercises();
+    searchExercises();
   }, []);
 
   const initialValues = {
@@ -52,7 +61,7 @@ const Exercises = () => {
       if (response.status === 200) {
         toast.success('Exercício cadastrado com sucesso!');
         resetForm({ values: initialValues });
-        fetchExercises();
+        searchExercises();
       }
     } catch (error) {
       if (error.response && error.response.data.message) {
@@ -62,6 +71,39 @@ const Exercises = () => {
       }
     }
   };
+
+  const deleteExercise = (id) => async () => {
+    Swal.fire({
+      title: 'Tem certeza?',
+      text: "Você não poderá reverter isso!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, deletar!',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        popup: 'bg-gray-800 text-white', 
+        title: 'font-bold', 
+        confirmButton: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded', 
+        cancelButton: 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' 
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await axios.delete('http://localhost:3001/deleteExercises', { data: { id } });
+          if (response.status === 200) {
+            toast.success('Exercício deletado com sucesso!');
+            searchExercises();
+          }
+        } catch (error) {
+          if (error.response && error.response.data.message) {
+            toast.error(error.response.data.message);
+          } else {
+            toast.error("Erro ao tentar deletar exercício");
+          }
+        }
+      }
+    });
+  }
 
   return (
     <>
@@ -113,20 +155,35 @@ const Exercises = () => {
           <Title>
             Seus exercícios
           </Title>
-          <div className="flex items-center justify-center w-full h-screen">
-            <div 
-              className="overflow-auto rounded-lg shadow w-4/5 max-h-[60vh] scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent custom-scrollbar"
-            >
-              <ul className="flex flex-col w-full mb-16">
-                {exercises.map((exercise) => (
-                  <li
-                    className="text-white text-lg bg-background p-3 rounded-md mx-4 my-1"
-                    key={exercise.id}
-                  >
-                    {exercise.name_exercise}
-                  </li>
-                ))}
-              </ul>
+          <div className="flex justify-center w-full h-screen mt-6">
+            <div className="overflow-auto rounded-lg w-4/5 max-h-[60vh] scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent custom-scrollbar">
+
+              {message ? (
+                <p className="text-white bg-red-400 p-3 font-semibold rounded-md">{message}</p>
+              ) : (
+
+                <ul className="flex flex-col w-full mb-16">
+                  {exercises.map((exercise) => (
+                    <li
+                      className="text-white text-lg bg-background rounded-md mx-4 p-1 my-1 flex justify-between items-center"
+                      key={exercise.id}
+                    >
+                      <span className="flex-grow border-r-2 border-gray-500 pl-6 py-2">
+                        {exercise.name_exercise}
+                      </span>
+                      <div
+                        className=" flex p-4 ml-3 items-center cursor-pointer rounded-md hover:bg-red-500 transition duration-200 ease-in-out"
+                        title="Deletar"
+                        onClick={deleteExercise(exercise.id)}
+                      >
+                        <FaTrash className=" h-full flex-shrink-0" />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+
+              )}
+
             </div>
           </div>
         </div>
