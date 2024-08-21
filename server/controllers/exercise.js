@@ -15,10 +15,11 @@ export const searchGroupsMuscles = async (req, res) => {
 }
 
 export const searchExercises = async (req, res) => {
+    const { idUser } = req.query;;
     try {
         const queryPromise = new Promise((resolve, reject) => {
-            const sql = "SELECT * FROM exercises";
-            db.query(sql, (err, result) => err ? reject(err) : resolve(result));
+            const sql = "SELECT * FROM exercises WHERE user_id = ?";
+            db.query(sql, [idUser],(err, result) => err ? reject(err) : resolve(result));
         });
 
         const result = await queryPromise;
@@ -29,8 +30,7 @@ export const searchExercises = async (req, res) => {
 }
 
 export const postExercises = async (req, res) => {
-    const nameExercise = req.body.nameExercise;
-    const muscleGroup = req.body.muscleGroup;
+    const { idUser, nameExercise, muscleGroup } = req.body;
 
     try {
         const checkIfExerciseExists = await exerciseExists(nameExercise);
@@ -39,11 +39,12 @@ export const postExercises = async (req, res) => {
         }
 
         const queryPromise = new Promise((resolve, reject) => {
-            const sql = "INSERT INTO exercises (name_exercise, group_muscle_id) VALUES (?, ?)";
+            const sql = "INSERT INTO exercises (name_exercise, group_muscle_id, user_id) VALUES (?, ?, ?)";
             db.query(sql,
                 [
                     nameExercise,
-                    muscleGroup
+                    muscleGroup,
+                    idUser
                 ],
                 (err, result) => err ? reject(err) : resolve(result)
             );

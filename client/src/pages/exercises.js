@@ -32,8 +32,11 @@ const Exercises = () => {
   });
 
   const searchExercises = async () => {
+    const idUser = localStorage.getItem('id');
+    console.log("id =>", idUser)
+
     try {
-      const response = await axios.get('http://localhost:3001/searchExercises');
+      const response = await axios.get('http://localhost:3001/searchExercises', { params: { idUser } });
       if (response.data.message.length > 0) {
         setExercises(response.data.message);
         setMessage('');
@@ -55,9 +58,10 @@ const Exercises = () => {
   }
 
   const handleSubmit = async (values, { resetForm }) => {
+    const idUser = localStorage.getItem('id');
+
     try {
-      const response = await axios.post('http://localhost:3001/postExercises', values);
-      console.log(response)
+      const response = await axios.post('http://localhost:3001/postExercises', { ...values, idUser } );
       if (response.status === 200) {
         toast.success('Exercício cadastrado com sucesso!');
         resetForm({ values: initialValues });
@@ -110,7 +114,7 @@ const Exercises = () => {
       <Header showTabs={true} />
       <ToastContainer position="bottom-right" />
       <div className="flex flex-col lg:flex-row justify-start items-stretch shadow-lg p-6 gap-x-4 gap-y-4 lg:gap-y-0" style={{ maxHeight: `calc(100vh - 100px)` }}>
-        <div className="w-full overflow-auto rounded-lg flex flex-col items-center relative overflow-hidden sm:max-w-full md:max-w-full lg:w-1/2 lg:bg-gray-500 lg:bg-opacity-20">
+        <div className="w-full rounded-lg flex flex-col items-center relative overflow-hidden sm:max-w-full md:max-w-full lg:w-1/2 lg:bg-gray-500 lg:bg-opacity-20">
           <Title>
             Cadastre seus exercícios
           </Title>

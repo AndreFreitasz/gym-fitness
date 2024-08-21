@@ -5,7 +5,7 @@ import Register from './pages/register';
 import Exercises from './pages/exercises';
 
 const PrivateRoute = ({ children }) => {
-  const userLoggedIn = Boolean(localStorage.getItem('user'));
+  const userLoggedIn = Boolean(localStorage.getItem('token'));
 
   return userLoggedIn ? children : <Navigate to="/" />;
 };
