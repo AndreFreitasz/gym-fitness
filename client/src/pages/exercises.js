@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { useSpring, animated } from 'react-spring';
 import Header from "../components/header/index.js";
 import Title from "../components/title/index.js";
 import Button from "../components/forms/button.js";
 import ValidatedInputField from "../components/forms/validatedInputField.js";
-import ValidatedSelectField from "../components/forms/validatedSelectField.js";
+import ValidatedSelectField from "../components/forms/selectField/index.js";
+import useFetchOptions from "../components/forms/selectField/useFetchOptions.js";
 import * as yup from 'yup';
 import { Formik, Form } from 'formik';
 import axios from 'axios';
 import Swal from 'sweetalert2'; 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 
 
 const schema = yup.object().shape({
@@ -24,6 +24,18 @@ const Exercises = () => {
   const AnimatedForm = animated(Form);
   const [message, setMessage] = useState('');
   const [exercises, setExercises] = useState([]);
+
+  const urlSearchGroupsMuscles = 'http://localhost:3001/searchGroupsMuscles';
+
+  const formatOption = useCallback(option => ({
+    value: option.id,
+    label: option.group_muscle
+  }), []);
+  
+  const muscleGroupOptions = useFetchOptions(
+    urlSearchGroupsMuscles,
+    formatOption
+  );
 
   const animationProps = useSpring({
     to: { opacity: 1, transform: 'translate3d(0,0px,0)' },
@@ -140,10 +152,10 @@ const Exercises = () => {
                 />
               </div>
               <div className="mb-10">
-                <ValidatedSelectField
+              <ValidatedSelectField
                   id="muscleGroup"
                   name="muscleGroup"
-                  url="http://localhost:3001/searchGroupsMuscles"
+                  options={muscleGroupOptions}
                   label="Grupo Muscular: "
                 />
               </div>

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-do
 import Login from './pages/login';
 import Register from './pages/register';
 import Exercises from './pages/exercises';
+import Weights from './pages/weights';
 
 const PrivateRoute = ({ children }) => {
   const userLoggedIn = Boolean(localStorage.getItem('token'));
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/exercises" element={<PrivateRoute> <Exercises /> </PrivateRoute>} />
+        <Route path="/weights" element={<PrivateRoute> <Weights /> </PrivateRoute>} />
       </Routes>
     </Router>
   );

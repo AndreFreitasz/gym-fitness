@@ -1,28 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Select from 'react-select';
 import { useField, useFormikContext } from 'formik';
-import axios from 'axios';
 
-const ValidatedSelectField = ({ placeholder, url, className, label, id, ...props }) => {
-  const [options, setOptions] = useState([]);
+const ValidatedSelectField = ({ placeholder, options, className, label, id, ...props }) => {
   const { setFieldValue, setFieldTouched } = useFormikContext();
   const [field, meta] = useField(props);
-
-  useEffect(() => {
-    const fetchOptions = async () => {
-      try {
-        const response = await axios.get(url);
-        const formattedOptions = response.data.message.map(option => ({
-          value: option.id,
-          label: option.group_muscle
-        }));
-        setOptions(formattedOptions);
-      } catch (error) {
-        console.error("Erro ao buscar dados: ", error);
-      }
-    };
-    fetchOptions();
-  }, [url]);
 
   const handleChange = (selectedOption) => {
     setFieldValue(props.name, selectedOption ? selectedOption.value : '');
@@ -38,6 +20,7 @@ const ValidatedSelectField = ({ placeholder, url, className, label, id, ...props
       boxShadow: 'none',
       color: 'white',
       padding: '0.30rem',
+      cursor: 'pointer',
       '&:hover': {
         borderColor: 'transparent',
         borderBottomColor: meta.touched && meta.error ? 'rgb(239 68 68)' : 'transparent',
@@ -69,7 +52,7 @@ const ValidatedSelectField = ({ placeholder, url, className, label, id, ...props
         id={id}
         options={options}
         onChange={handleChange}
-        placeholder={placeholder || 'Selecione o grupo muscular do exercício'}
+        placeholder={placeholder || 'Selecione uma opção'}
         value={options.find(option => option.value === field.value) || ''}
         classNamePrefix="react-select"
         styles={customStyles}
