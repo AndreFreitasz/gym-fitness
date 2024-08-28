@@ -18,7 +18,7 @@ export const searchExercises = async (req, res) => {
     const { idUser } = req.query;;
     try {
         const queryPromise = new Promise((resolve, reject) => {
-            const sql = "SELECT * FROM exercises WHERE user_id = ?";
+            const sql = "SELECT * FROM exercises WHERE user_id = ? ORDER BY name_exercise";
             db.query(sql, [idUser],(err, result) => err ? reject(err) : resolve(result));
         });
 

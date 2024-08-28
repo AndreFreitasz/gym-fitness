@@ -20,10 +20,10 @@ function Header({ showTabs, isActive }) {
   return (
     <animated.header style={headerProps} className=" text-white p-4 mb-4">
       <div className="flex justify-between items-center mx-7">
-        <div>
+        {/* <div>
           <span className="font-extrabold text-5xl text-red-500">Gym</span>'
           <span className="font-extrabold text-5xl">Fitness</span>
-        </div>
+        </div> */}
 
         {showTabs && (
           <>

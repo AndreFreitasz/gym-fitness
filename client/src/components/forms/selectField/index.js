@@ -33,15 +33,20 @@ const ValidatedSelectField = ({ placeholder, options, className, label, id, ...p
     }),
     option: (provided, state) => ({
       ...provided,
-      backgroundColor: state.isSelected ? 'grey' : '#1B2735',
+      cursor: 'pointer',
+      backgroundColor: state.isSelected ? 'rgba(27, 39, 45)' : '#1B2735',
       color: 'white',
       '&:hover': {
-        backgroundColor: 'grey'
+        backgroundColor: 'rgba(27, 39, 45)'
       }
     }),
     singleValue: (provided) => ({
       ...provided,
       color: 'white',
+    }),
+    input: (provided) => ({
+      ...provided,
+      color: '#fff', 
     }),
   };
 

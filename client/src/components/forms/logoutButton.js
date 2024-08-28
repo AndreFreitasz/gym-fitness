@@ -13,7 +13,11 @@ const LogoutButton = () => {
     };
 
     return (
-        <Button className="px-6 flex justify-center items-center" onClick={handleLogout}>
+        <Button
+            colorClass="bg-red-500 hover:bg-red-600" 
+            className="px-6 flex justify-center items-center" 
+            onClick={handleLogout}
+        > 
             <FaSignOutAlt className="mr-2" /> Sair
         </Button>
     );
