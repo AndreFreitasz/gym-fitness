@@ -49,7 +49,7 @@ const ModalWeights = ({ isOpen, onRequestClose, children, title, onSubmit }) => 
             <Modal
                 isOpen={isOpen}
                 onRequestClose={onRequestClose}
-                contentLabel="Exemplo de Modal"
+                contentLabel="Modal para cadastrar pesos recordes"
                 className="fixed inset-0 flex items-center justify-center z-50"
                 overlayClassName="fixed inset-0 bg-black bg-opacity-50"
                 style={{ overlay: { transition: 'opacity 0.3s ease' } }}
@@ -81,6 +81,7 @@ const ModalWeights = ({ isOpen, onRequestClose, children, title, onSubmit }) => 
                                         id="recordsWeights"
                                         name="recordsWeights"
                                         label="Peso (kg):"
+                                        placeholder="Digite o peso o peso levantado em kg"
                                         className="w-full"
                                     />
                                 </div>

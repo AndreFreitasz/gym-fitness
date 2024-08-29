@@ -45,7 +45,6 @@ const Exercises = () => {
 
   const searchExercises = async () => {
     const idUser = localStorage.getItem('id');
-    console.log("id =>", idUser)
 
     try {
       const response = await axios.get('http://localhost:3001/searchExercises', { params: { idUser } });
@@ -160,7 +159,7 @@ const Exercises = () => {
                 />
               </div>
               <div className="mt-auto flex justify-end">
-                <Button type="submit">
+                <Button colorClass="bg-red-500 hover:bg-red-600" type="submit">
                   Cadastrar
                 </Button>
               </div>

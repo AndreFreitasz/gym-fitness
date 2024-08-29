@@ -15,7 +15,8 @@ export const searchGroupsMuscles = async (req, res) => {
 }
 
 export const searchExercises = async (req, res) => {
-    const { idUser } = req.query;;
+    const { idUser } = req.query;
+
     try {
         const queryPromise = new Promise((resolve, reject) => {
             const sql = "SELECT * FROM exercises WHERE user_id = ? ORDER BY name_exercise";

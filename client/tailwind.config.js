@@ -19,7 +19,7 @@ module.exports = {
         },
       },
       animation: {
-        bounce: 'bounce 2s infinite', // Aumentando a duração para 2 segundos
+        bounce: 'bounce 2s infinite', 
       },
     },
   },

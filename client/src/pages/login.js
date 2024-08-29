@@ -88,6 +88,7 @@ const Login = () => {
                 Não tem uma conta? Se cadastre aqui
               </a>
               <Button
+                colorClass="bg-red-500 hover:bg-red-600"
                 className="additional-classes"
                 type="submit"
               >

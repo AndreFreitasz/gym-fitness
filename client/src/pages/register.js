@@ -105,10 +105,11 @@ const Register = () => {
                                 Já é cadastrado? Entre na sua conta
                             </a>
                             <Button
+                                colorClass="bg-red-500 hover:bg-red-600"
                                 className="additional-classes"
                                 type="submit"
                             >
-                                Entrar
+                                Cadastrar
                             </Button>
                         </div>
 
