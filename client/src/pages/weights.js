@@ -8,6 +8,7 @@ import SimpleTable from '../components/table/index.js';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const Weights = () => {
 
@@ -22,14 +23,12 @@ const Weights = () => {
         setModalIsOpen(false);
     };
 
-    const searchExercises = async () => {
+    const searchUserData = async () => {
         const idUser = localStorage.getItem('id');
-        console.log("id =>", idUser);
 
         try {
             const response = await axios.get('http://localhost:3001/searchUserData', { params: { idUser } });
             if (response.data.message.length > 0) {
-                console.log("response =>", response.data.message);
                 setExercises(response.data.message);
             } else {
                 console.log("erro");
@@ -40,7 +39,7 @@ const Weights = () => {
     };
 
     useEffect(() => {
-        searchExercises();
+        searchUserData();
     }, []);
 
     const handleSubmit = async (values, { resetForm }) => {
@@ -51,6 +50,7 @@ const Weights = () => {
             if (response.status === 200) {
                 closeModal();
                 toast.success("Peso cadastrado com sucesso");
+                searchUserData();
             }
         } catch (error) {
             if (error.response && error.response.data.message) {
@@ -72,12 +72,49 @@ const Weights = () => {
                 accessor: 'muscle_group_name',
             },
             {
+                Header: 'Data do Recorde',
+                accessor: 'record_weight_date',
+            },
+            {
                 Header: 'Peso Recorde',
                 accessor: 'record_weight',
             },
         ],
         []
     );
+
+    const handleDelete = () => {
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: "Você não poderá reverter isso!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim, deletar!',
+            cancelButtonText: 'Cancelar',
+            customClass: {
+              popup: 'bg-gray-800 text-white', 
+              title: 'font-bold', 
+              confirmButton: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded', 
+              cancelButton: 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' 
+            }
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+              try {
+                const response = await axios.delete('http://localhost:3001/deleteRecordsWeights');
+                if (response.status === 200) {
+                  toast.success('Exercício deletado com sucesso!');
+                  searchUserData();
+                }
+              } catch (error) {
+                if (error.response && error.response.data.message) {
+                  toast.error(error.response.data.message);
+                } else {
+                  toast.error("Erro ao tentar deletar exercício");
+                }
+              }
+            }
+          });
+    };
 
     return (
         <>
@@ -102,9 +139,11 @@ const Weights = () => {
                 onSubmit={handleSubmit}
                 title={"Cadastre os seus pesos recordes"}
             />
-            <div className="p-4">
-                <SimpleTable columns={columns} data={exercises} />
-            </div>
+            <SimpleTable 
+                columns={columns} 
+                data={exercises} 
+                onDelete={handleDelete} 
+            />
         </>
     );
 }

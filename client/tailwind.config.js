@@ -5,6 +5,9 @@ module.exports = {
     extend: {
       colors: {
         background: '#0f172a',
+        'custom-blue-light': '#1e293b',
+        'custom-blue-lighter': '#0b1324',
+        'custom-blue-dark': '#0a1120',
       },
       fontFamily: {
         'sans': ['Montserrat', 'sans-serif'],

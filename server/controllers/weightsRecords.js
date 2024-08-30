@@ -1,4 +1,5 @@
 import db from "../database.js";
+import { format } from 'date-fns';
 
 export const postWeightRecord = async (req, res) => {
     const { exercises, recordsWeights, dateOfRecordWeight, idUser } = req.body;
@@ -34,7 +35,8 @@ export const searchUserData = async (req, res) => {
                 SELECT 
                     e.name_exercise,
                     be.group_muscle AS muscle_group_name,
-                    wr.record_weight
+                    wr.record_weight,
+                    wr.record_weight_date
                 FROM 
                     weights_records wr 
                 JOIN 
@@ -43,13 +45,21 @@ export const searchUserData = async (req, res) => {
                     body_exercises as be ON e.group_muscle_id = be.id
                 WHERE 
                     wr.user_id = ?
+                    ORDER BY wr.record_weight_date DESC
             `;
             db.query(sql, idUser, (err, result) => err ? reject(err) : resolve(result)
             );
         });
 
         const result = await queryPromise;
-        res.status(200).json({ message: result });
+
+        const formattedResult = result.map(record => ({
+            ...record,
+            record_weight: `${record.record_weight} kg`,
+            record_weight_date: format(new Date(record.record_weight_date), 'dd/MM/yyyy')
+        }));
+        
+        res.status(200).json({ message: formattedResult });
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
