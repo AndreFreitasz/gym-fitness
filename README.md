@@ -1,2 +1,2 @@
 # gymFitness
-Um projeto para deixar os pesos registrados de cada exercicio da academia
+Um projeto para cronograma de exercicios de academia e facilitar sua evolução
