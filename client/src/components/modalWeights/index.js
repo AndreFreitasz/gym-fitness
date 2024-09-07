@@ -17,7 +17,7 @@ const schema = Yup.object().shape({
     dateOfRecordWeight: Yup.date().required('Campo obrigatório'),
 });
 
-const ModalWeights = ({ isOpen, onRequestClose, children, title, onSubmit }) => {
+const ModalWeights = ({ isOpen, onRequestClose, title, onSubmit }) => {
     const idUser = localStorage.getItem('id');
     const urlSearchExercises = 'http://localhost:3001/searchExercises';
 

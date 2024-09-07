@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaTrash, FaEye } from 'react-icons/fa';
 
-const SimpleTable = ({ columns, data, onDelete, onInfo }) => {
+const TableDataWeights = ({ columns, data, onDelete, onInfo }) => {
     return (
         <table className="w-[80%] text-white bg-custom-blue-dark mx-auto rounded-lg overflow-hidden shadow-md">
             <thead className="bg-slate-800">
@@ -21,7 +21,7 @@ const SimpleTable = ({ columns, data, onDelete, onInfo }) => {
                         key={rowIndex}
                         className={`${rowIndex % 2 === 0
                             ? 'bg-custom-blue-lighter'
-                            : 'bg-custom-blue-dark'} cursor-pointer hover:bg-custon-blue-dark hover:opacity-80`}
+                            : 'bg-custom-blue-dark'}`}
                     >
                         <td className="p-3 border-r border-custom-blue-light text-center align-middle text-lg">
                             {rowIndex + 1}
@@ -36,7 +36,7 @@ const SimpleTable = ({ columns, data, onDelete, onInfo }) => {
                         <td className="p-3 text-center align-middle">
                             <button
                                 className="bg-red-600 text-white p-2 rounded mr-2 hover:bg-red-700"
-                                onClick={onDelete} 
+                                onClick={() => onDelete(row.id)}
                             >
                                 <FaTrash />
                             </button>
@@ -54,4 +54,4 @@ const SimpleTable = ({ columns, data, onDelete, onInfo }) => {
     );
 };
 
-export default SimpleTable;
+export default TableDataWeights;

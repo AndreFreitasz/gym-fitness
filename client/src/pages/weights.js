@@ -4,7 +4,8 @@ import Title from "../components/title/index.js";
 import Button from "../components/forms/button.js";
 import { FaPlus } from 'react-icons/fa';
 import ModalWeights from '../components/modalWeights/index.js';
-import SimpleTable from '../components/table/index.js';
+import ModalViewWeights from '../components/modalWeights/viewWeights.js';
+import TableDataWeights from '../components/table/index.js';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
@@ -13,7 +14,15 @@ import Swal from "sweetalert2";
 const Weights = () => {
 
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [infoModalIsOpen, setInfoModalIsOpen] = useState(false);
+    const [selectedRow, setSelectedRow] = useState(null);
     const [exercises, setExercises] = useState([]);
+    const [filteredExercises, setFilteredExercises] = useState([]);
+    const [filter, setFilter] = useState({
+        exercise: '',
+        date: '',
+        muscleGroup: ''
+    });
 
     const openModal = () => {
         setModalIsOpen(true);
@@ -23,6 +32,16 @@ const Weights = () => {
         setModalIsOpen(false);
     };
 
+    const infoOpenModal = (row) => {
+        setSelectedRow(row);
+        setInfoModalIsOpen(true);
+    };
+
+    const infoCloseModal = () => {
+        setInfoModalIsOpen(false);
+        setSelectedRow(null);
+    };
+
     const searchUserData = async () => {
         const idUser = localStorage.getItem('id');
 
@@ -30,11 +49,12 @@ const Weights = () => {
             const response = await axios.get('http://localhost:3001/searchUserData', { params: { idUser } });
             if (response.data.message.length > 0) {
                 setExercises(response.data.message);
+                setFilteredExercises(response.data.message);
             } else {
-                console.log("erro");
+                console.log("Erro ao buscar dados do usuário");
             }
         } catch (error) {
-            console.error("Erro ao buscar dados: ", error);
+            console.error("Erro ao buscar dados do usuário: ", error);
         }
     };
 
@@ -56,7 +76,7 @@ const Weights = () => {
             if (error.response && error.response.data.message) {
                 toast.error(error.response.data.message);
             } else {
-                toast.error("Erro ao tentar cadastrar usuário");
+                toast.error("Erro ao tentar cadastrar peso");
             }
         }
     };
@@ -83,7 +103,7 @@ const Weights = () => {
         []
     );
 
-    const handleDelete = () => {
+    const handleDelete = (id) => {
         Swal.fire({
             title: 'Tem certeza?',
             text: "Você não poderá reverter isso!",
@@ -92,29 +112,52 @@ const Weights = () => {
             confirmButtonText: 'Sim, deletar!',
             cancelButtonText: 'Cancelar',
             customClass: {
-              popup: 'bg-gray-800 text-white', 
-              title: 'font-bold', 
-              confirmButton: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded', 
-              cancelButton: 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' 
+                popup: 'bg-gray-800 text-white',
+                title: 'font-bold',
+                confirmButton: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded',
+                cancelButton: 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
             }
-          }).then(async (result) => {
+        }).then(async (result) => {
             if (result.isConfirmed) {
-              try {
-                const response = await axios.delete('http://localhost:3001/deleteRecordsWeights');
-                if (response.status === 200) {
-                  toast.success('Exercício deletado com sucesso!');
-                  searchUserData();
+                try {
+                    const response = await axios.delete('http://localhost:3001/deleteWeightRecord', { data: { id } });
+                    if (response.status === 200) {
+                        toast.success('Exercício deletado com sucesso!');
+                        searchUserData();
+                    }
+                } catch (error) {
+                    if (error.response && error.response.data.message) {
+                        toast.error(error.response.data.message);
+                    } else {
+                        toast.error("Erro ao tentar deletar exercício");
+                    }
                 }
-              } catch (error) {
-                if (error.response && error.response.data.message) {
-                  toast.error(error.response.data.message);
-                } else {
-                  toast.error("Erro ao tentar deletar exercício");
-                }
-              }
             }
-          });
+        });
     };
+
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilter({
+            ...filter,
+            [name]: value
+        });
+    };
+
+    useEffect(() => {
+        const filtered = exercises.filter(exercise => {
+            return (
+                (filter.exercise === '' || exercise.name_exercise === filter.exercise) &&
+                (filter.date === '' || exercise.record_weight_date === filter.date) &&
+                (filter.muscleGroup === '' || exercise.muscle_group_name === filter.muscleGroup)
+            );
+        });
+        setFilteredExercises(filtered);
+    }, [filter, exercises]);
+
+    const uniqueExercises = [...new Set(exercises.map(exercise => exercise.name_exercise))];
+    const uniqueDates = [...new Set(exercises.map(exercise => exercise.record_weight_date))];
+    const uniqueMuscleGroups = [...new Set(exercises.map(exercise => exercise.muscle_group_name))];
 
     return (
         <>
@@ -132,6 +175,44 @@ const Weights = () => {
                     <FaPlus className="mr-4" />
                     Cadastre os seus pesos recordes
                 </Button>
+                <div className="flex mb-4 ml-8">
+                    <p className="text-white text-sm font-bold mr-3">Filtrar por: </p>
+                    <div className="flex space-x-2">
+                        <select
+                            name="exercise"
+                            value={filter.exercise}
+                            onChange={handleFilterChange}
+                            className="p-1 bg-red-500 text-white rounded-xl text-xs"
+                        >
+                            <option value="">Todos os Exercícios</option>
+                            {uniqueExercises.map((exercise, index) => (
+                                <option key={index} value={exercise}>{exercise}</option>
+                            ))}
+                        </select>
+                        <select
+                            name="date"
+                            value={filter.date}
+                            onChange={handleFilterChange}
+                            className="p-1 bg-red-500 text-white rounded-xl text-xs"
+                        >
+                            <option value="">Todas as Datas</option>
+                            {uniqueDates.map((date, index) => (
+                                <option key={index} value={date}>{date}</option>
+                            ))}
+                        </select>
+                        <select
+                            name="muscleGroup"
+                            value={filter.muscleGroup}
+                            onChange={handleFilterChange}
+                            className="p-1 bg-red-500 text-white rounded-xl text-xs"
+                        >
+                            <option value="">Todos os Grupos Musculares</option>
+                            {uniqueMuscleGroups.map((muscleGroup, index) => (
+                                <option key={index} value={muscleGroup}>{muscleGroup}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
             </div>
             <ModalWeights
                 isOpen={modalIsOpen}
@@ -139,10 +220,17 @@ const Weights = () => {
                 onSubmit={handleSubmit}
                 title={"Cadastre os seus pesos recordes"}
             />
-            <SimpleTable 
-                columns={columns} 
-                data={exercises} 
-                onDelete={handleDelete} 
+            <TableDataWeights
+                columns={columns}
+                data={filteredExercises}
+                onDelete={handleDelete}
+                onInfo={infoOpenModal}
+            />
+            <ModalViewWeights
+                title={"Pesos cadastrados do exercício"}
+                isOpen={infoModalIsOpen}
+                onRequestClose={infoCloseModal}
+                rowData={selectedRow}
             />
         </>
     );
