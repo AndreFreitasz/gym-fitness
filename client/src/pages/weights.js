@@ -6,10 +6,11 @@ import { FaPlus } from 'react-icons/fa';
 import ModalWeights from '../components/modalWeights/index.js';
 import ModalViewWeights from '../components/modalWeights/viewWeights.js';
 import TableDataWeights from '../components/table/index.js';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import Swal from "sweetalert2";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import '../css/customStylesFilters.css';
 
 const Weights = () => {
 
@@ -81,6 +82,17 @@ const Weights = () => {
         }
     };
 
+    useEffect(() => {
+        const filtered = exercises.filter(exercise => {
+            return (
+                (filter.exercise === '' || exercise.name_exercise === filter.exercise) &&
+                (filter.date === '' || exercise.record_weight_date === filter.date) &&
+                (filter.muscleGroup === '' || exercise.muscle_group_name === filter.muscleGroup)
+            );
+        });
+        setFilteredExercises(filtered);
+    }, [filter, exercises]);
+
     const columns = useMemo(
         () => [
             {
@@ -144,20 +156,46 @@ const Weights = () => {
         });
     };
 
-    useEffect(() => {
-        const filtered = exercises.filter(exercise => {
-            return (
-                (filter.exercise === '' || exercise.name_exercise === filter.exercise) &&
-                (filter.date === '' || exercise.record_weight_date === filter.date) &&
-                (filter.muscleGroup === '' || exercise.muscle_group_name === filter.muscleGroup)
-            );
-        });
-        setFilteredExercises(filtered);
-    }, [filter, exercises]);
-
     const uniqueExercises = [...new Set(exercises.map(exercise => exercise.name_exercise))];
     const uniqueDates = [...new Set(exercises.map(exercise => exercise.record_weight_date))];
     const uniqueMuscleGroups = [...new Set(exercises.map(exercise => exercise.muscle_group_name))];
+
+    const customStyles = {
+        control: (provided, state) => ({
+            ...provided,
+            backgroundColor: '#1B2735',
+            borderColor: 'transparent',
+            boxShadow: 'none',
+            color: 'white',
+            padding: '0.30rem',
+            cursor: 'pointer',
+            '&:hover': {
+                borderColor: 'transparent',
+            }
+        }),
+        menu: (provided) => ({
+            ...provided,
+            backgroundColor: '#1B2735',
+            color: 'white',
+        }),
+        option: (provided, state) => ({
+            ...provided,
+            cursor: 'pointer',
+            backgroundColor: state.isSelected ? 'rgba(27, 39, 45)' : '#1B2735',
+            color: 'white',
+            '&:hover': {
+                backgroundColor: 'rgba(27, 39, 45)'
+            }
+        }),
+        singleValue: (provided) => ({
+            ...provided,
+            color: 'white',
+        }),
+        input: (provided) => ({
+            ...provided,
+            color: '#fff',
+        }),
+    };
 
     return (
         <>
@@ -182,7 +220,7 @@ const Weights = () => {
                             name="exercise"
                             value={filter.exercise}
                             onChange={handleFilterChange}
-                            className="p-1 bg-red-500 text-white rounded-xl text-xs"
+                            className="p-1 custom-select text-xs"
                         >
                             <option value="">Todos os Exercícios</option>
                             {uniqueExercises.map((exercise, index) => (
@@ -193,7 +231,7 @@ const Weights = () => {
                             name="date"
                             value={filter.date}
                             onChange={handleFilterChange}
-                            className="p-1 bg-red-500 text-white rounded-xl text-xs"
+                            className="p-1 custom-select text-xs"
                         >
                             <option value="">Todas as Datas</option>
                             {uniqueDates.map((date, index) => (
@@ -204,7 +242,7 @@ const Weights = () => {
                             name="muscleGroup"
                             value={filter.muscleGroup}
                             onChange={handleFilterChange}
-                            className="p-1 bg-red-500 text-white rounded-xl text-xs"
+                            className="p-1 custom-select text-xs"
                         >
                             <option value="">Todos os Grupos Musculares</option>
                             {uniqueMuscleGroups.map((muscleGroup, index) => (

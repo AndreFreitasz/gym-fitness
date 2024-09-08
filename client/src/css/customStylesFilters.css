@@ -1,0 +1,26 @@
+/* customStylesFilters.css */
+
+/* Estilo base para os selects */
+.custom-select {
+    background-color: #1B2735; 
+    text-align: center;
+    border: none;
+    border-radius: 0.5rem;
+    color: white;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    padding-right: 1.5rem; /* Espaço para a seta personalizada */
+}
+
+/* Estilo para as opções */
+.custom-select option {
+    background-color: #1B2735; 
+    color: white;
+}
+
+
+/* Remover o foco dos elementos select */
+.custom-select:focus {
+    outline: none;
+    box-shadow: none;
+}

@@ -29,6 +29,7 @@ function Header({ showTabs, isActive }) {
           <>
             <ul className="flex space-x-9 mr-40">
               <NavItem href="/exercises" label="Exercícios" isActive={isActive === '/exercises'} />
+              <NavItem href="/exercises-schedule" label="Cronograma" isActive={isActive === '/exercises-schedule'} />
               <NavItem href="/weights" label="Pesos" isActive={isActive === '/weights'} />
             </ul>
             <LogoutButton />
