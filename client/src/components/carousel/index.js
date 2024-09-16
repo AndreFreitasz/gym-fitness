@@ -9,15 +9,23 @@ const Carousel = ({ children }) => {
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + children.length) % children.length);
+    setCurrentIndex(
+      (prevIndex) => (prevIndex - 1 + children.length) % children.length,
+    );
   };
 
   return (
     <div className="relative w-full h-full">
-      <div className="absolute top-1/2 transform -translate-y-1/2 left-4 cursor-pointer" onClick={prevSlide}>
+      <div
+        className="absolute top-1/2 transform -translate-y-1/2 left-4 cursor-pointer"
+        onClick={prevSlide}
+      >
         <IoIosArrowBack className="text-white text-4xl" />
       </div>
-      <div className="absolute top-1/2 transform -translate-y-1/2 right-4 cursor-pointer" onClick={nextSlide}>
+      <div
+        className="absolute top-1/2 transform -translate-y-1/2 right-4 cursor-pointer"
+        onClick={nextSlide}
+      >
         <IoIosArrowForward className="text-white text-4xl" />
       </div>
       <div className="overflow-hidden h-full">

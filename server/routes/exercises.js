@@ -14,5 +14,4 @@ router.get("/searchExercises", searchExercises);
 
 router.delete("/deleteExercises", deleteExercises);
 
-
 export default router;

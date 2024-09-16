@@ -1,58 +1,63 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
-import { useSpring, animated } from 'react-spring';
+import { useSpring, animated } from "react-spring";
 import Header from "../components/header/index.js";
 import Title from "../components/title/index.js";
 import Button from "../components/forms/button.js";
 import ValidatedInputField from "../components/forms/validatedInputField.js";
 import ValidatedSelectField from "../components/forms/selectField/index.js";
 import useFetchOptions from "../components/forms/selectField/useFetchOptions.js";
-import * as yup from 'yup';
-import { Formik, Form } from 'formik';
-import axios from 'axios';
-import Swal from 'sweetalert2'; 
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+import * as yup from "yup";
+import { Formik, Form } from "formik";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const schema = yup.object().shape({
-  nameExercise: yup.string().required('O nome do exercício é obrigatório.'),
-  muscleGroup: yup.number().required('O grupo muscular é obrigatório.')
+  nameExercise: yup.string().required("O nome do exercício é obrigatório."),
+  muscleGroup: yup.number().required("O grupo muscular é obrigatório."),
 });
 
 const Exercises = () => {
   const AnimatedForm = animated(Form);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [exercises, setExercises] = useState([]);
 
-  const urlSearchGroupsMuscles = 'http://localhost:3001/searchGroupsMuscles';
+  const urlSearchGroupsMuscles = "http://localhost:3001/searchGroupsMuscles";
 
-  const formatOption = useCallback(option => ({
-    value: option.id,
-    label: option.group_muscle
-  }), []);
-  
+  const formatOption = useCallback(
+    (option) => ({
+      value: option.id,
+      label: option.group_muscle,
+    }),
+    [],
+  );
+
   const muscleGroupOptions = useFetchOptions(
     urlSearchGroupsMuscles,
-    formatOption
+    formatOption,
   );
 
   const animationProps = useSpring({
-    to: { opacity: 1, transform: 'translate3d(0,0px,0)' },
-    from: { opacity: 0, transform: 'translate3d(0,200px,0)' },
-    delay: 300
+    to: { opacity: 1, transform: "translate3d(0,0px,0)" },
+    from: { opacity: 0, transform: "translate3d(0,200px,0)" },
+    delay: 300,
   });
 
   const searchExercises = async () => {
-    const idUser = localStorage.getItem('id');
+    const idUser = localStorage.getItem("id");
 
     try {
-      const response = await axios.get('http://localhost:3001/searchExercises', { params: { idUser } });
+      const response = await axios.get(
+        "http://localhost:3001/searchExercises",
+        { params: { idUser } },
+      );
       if (response.data.message.length > 0) {
         setExercises(response.data.message);
-        setMessage('');
+        setMessage("");
       } else {
-        setMessage('Nenhum exercício cadastrado!');
+        setMessage("Nenhum exercício cadastrado!");
       }
     } catch (error) {
       console.error("Erro ao buscar dados: ", error);
@@ -64,17 +69,20 @@ const Exercises = () => {
   }, []);
 
   const initialValues = {
-    nameExercise: '',
-    muscleGroup: ''
-  }
+    nameExercise: "",
+    muscleGroup: "",
+  };
 
   const handleSubmit = async (values, { resetForm }) => {
-    const idUser = localStorage.getItem('id');
+    const idUser = localStorage.getItem("id");
 
     try {
-      const response = await axios.post('http://localhost:3001/postExercises', { ...values, idUser } );
+      const response = await axios.post("http://localhost:3001/postExercises", {
+        ...values,
+        idUser,
+      });
       if (response.status === 200) {
-        toast.success('Exercício cadastrado com sucesso!');
+        toast.success("Exercício cadastrado com sucesso!");
         resetForm({ values: initialValues });
         searchExercises();
       }
@@ -89,24 +97,29 @@ const Exercises = () => {
 
   const deleteExercise = (id) => async () => {
     Swal.fire({
-      title: 'Tem certeza?',
+      title: "Tem certeza?",
       text: "Você não poderá reverter isso!",
-      icon: 'warning',
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonText: 'Sim, deletar!',
-      cancelButtonText: 'Cancelar',
+      confirmButtonText: "Sim, deletar!",
+      cancelButtonText: "Cancelar",
       customClass: {
-        popup: 'bg-gray-800 text-white', 
-        title: 'font-bold', 
-        confirmButton: 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded', 
-        cancelButton: 'bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' 
-      }
+        popup: "bg-gray-800 text-white",
+        title: "font-bold",
+        confirmButton:
+          "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
+        cancelButton:
+          "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded",
+      },
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await axios.delete('http://localhost:3001/deleteExercises', { data: { id } });
+          const response = await axios.delete(
+            "http://localhost:3001/deleteExercises",
+            { data: { id } },
+          );
           if (response.status === 200) {
-            toast.success('Exercício deletado com sucesso!');
+            toast.success("Exercício deletado com sucesso!");
             searchExercises();
           }
         } catch (error) {
@@ -118,17 +131,18 @@ const Exercises = () => {
         }
       }
     });
-  }
+  };
 
   return (
     <>
       <Header showTabs={true} />
       <ToastContainer position="bottom-right" />
-      <div className="flex flex-col lg:flex-row justify-start items-stretch shadow-lg p-6 gap-x-4 gap-y-4 lg:gap-y-0" style={{ maxHeight: `calc(100vh - 100px)` }}>
+      <div
+        className="flex flex-col lg:flex-row justify-start items-stretch shadow-lg p-6 gap-x-4 gap-y-4 lg:gap-y-0"
+        style={{ maxHeight: `calc(100vh - 100px)` }}
+      >
         <div className="w-full rounded-lg flex flex-col items-center relative overflow-hidden sm:max-w-full md:max-w-full lg:w-1/2 lg:bg-gray-500 lg:bg-opacity-20">
-          <Title>
-            Cadastre seus exercícios
-          </Title>
+          <Title>Cadastre seus exercícios</Title>
           <Formik
             initialValues={initialValues}
             validationSchema={schema}
@@ -151,7 +165,7 @@ const Exercises = () => {
                 />
               </div>
               <div className="mb-10">
-              <ValidatedSelectField
+                <ValidatedSelectField
                   id="muscleGroup"
                   name="muscleGroup"
                   options={muscleGroupOptions}
@@ -166,17 +180,15 @@ const Exercises = () => {
             </AnimatedForm>
           </Formik>
         </div>
-        <div className="w-full rounded-lg flex flex-col items-center relative sm:max-w-full md:max-w-full lg:w-1/2 lg:bg-gray-500 lg:bg-opacity-20 overflow-hidden" >
-          <Title>
-            Seus exercícios
-          </Title>
+        <div className="w-full rounded-lg flex flex-col items-center relative sm:max-w-full md:max-w-full lg:w-1/2 lg:bg-gray-500 lg:bg-opacity-20 overflow-hidden">
+          <Title>Seus exercícios</Title>
           <div className="flex justify-center w-full h-screen mt-6">
             <div className="overflow-auto rounded-lg w-4/5 max-h-[60vh] scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent custom-scrollbar">
-
               {message ? (
-                <p className="text-white bg-red-400 p-3 font-semibold rounded-md">{message}</p>
+                <p className="text-white bg-red-400 p-3 font-semibold rounded-md">
+                  {message}
+                </p>
               ) : (
-
                 <ul className="flex flex-col w-full mb-16">
                   {exercises.map((exercise) => (
                     <li
@@ -196,15 +208,13 @@ const Exercises = () => {
                     </li>
                   ))}
                 </ul>
-
               )}
-
             </div>
           </div>
         </div>
       </div>
     </>
   );
-}
+};
 
 export default Exercises;

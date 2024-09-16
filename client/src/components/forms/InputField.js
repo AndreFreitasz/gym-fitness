@@ -1,9 +1,24 @@
-import { Field } from 'formik';
+import { Field } from "formik";
 
-const InputField = ({ label, name, id, className, type, placeholder, autoComplete }) => {
+const InputField = ({
+  label,
+  name,
+  id,
+  className,
+  type,
+  placeholder,
+  autoComplete,
+}) => {
   return (
     <div className="mb-4">
-      {label && <label htmlFor={id} className="block text-white text-sm font-semibold mb-4">{label}</label>}
+      {label && (
+        <label
+          htmlFor={id}
+          className="block text-white text-sm font-semibold mb-4"
+        >
+          {label}
+        </label>
+      )}
       <Field
         name={name}
         id={id}
@@ -14,6 +29,6 @@ const InputField = ({ label, name, id, className, type, placeholder, autoComplet
       />
     </div>
   );
-}
+};
 
 export default InputField;
