@@ -5,8 +5,9 @@
   "description": "API do projeto fitness",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "lint:check": "prettier --check .",
+    "lint:fix": "prettier --write ."
   },
   "author": "André Freitas",
   "license": "ISC",
@@ -20,5 +21,8 @@
     "mysql": "^2.18.1",
     "nodemon": "^3.1.3",
     "sequelize": "^6.37.3"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3"
   }
 }

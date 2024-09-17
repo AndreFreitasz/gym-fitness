@@ -14,5 +14,4 @@ router.delete("/deleteWeightRecord", deleteWeightRecord);
 
 router.get("/searchDatesWeightsByExercise", searchDatesWeightsByExercise);
 
-
 export default router;

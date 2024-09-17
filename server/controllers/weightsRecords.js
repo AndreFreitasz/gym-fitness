@@ -1,53 +1,51 @@
 import db from "../database.js";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
 export const postWeightRecord = async (req, res) => {
-    const { exercises, recordsWeights, dateOfRecordWeight, idUser } = req.body;
+  const { exercises, recordsWeights, dateOfRecordWeight, idUser } = req.body;
 
-    try {
+  try {
+    const queryPromise = new Promise((resolve, reject) => {
+      const sql =
+        "INSERT INTO weights_records (record_weight, record_weight_date, user_id, exercise_id) VALUES (?, ?, ?, ?)";
+      db.query(
+        sql,
+        [recordsWeights, dateOfRecordWeight, idUser, exercises],
+        (err, result) => (err ? reject(err) : resolve(result)),
+      );
+    });
 
-        const queryPromise = new Promise((resolve, reject) => {
-            const sql = "INSERT INTO weights_records (record_weight, record_weight_date, user_id, exercise_id) VALUES (?, ?, ?, ?)";
-            db.query(sql,
-                [
-                    recordsWeights,
-                    dateOfRecordWeight,
-                    idUser,
-                    exercises
-                ],
-                (err, result) => err ? reject(err) : resolve(result)
-            );
-        });
-
-        await queryPromise;
-        res.status(200).json({ message: "Exercício foi cadastrado com sucesso!" });
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-}
+    await queryPromise;
+    res.status(200).json({ message: "Exercício foi cadastrado com sucesso!" });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
 
 export const deleteWeightRecord = async (req, res) => {
-    const id = req.body.id;
+  const id = req.body.id;
 
-    try {
-        const queryPromise = new Promise((resolve, reject) => {
-            const sql = "DELETE FROM weights_records WHERE id = ?";
-            db.query(sql, [id], (err, result) => err ? reject(err) : resolve(result));
-        });
+  try {
+    const queryPromise = new Promise((resolve, reject) => {
+      const sql = "DELETE FROM weights_records WHERE id = ?";
+      db.query(sql, [id], (err, result) =>
+        err ? reject(err) : resolve(result),
+      );
+    });
 
-        await queryPromise;
-        res.status(200).json({ message: "Dado deletado com sucesso!" });
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-}
+    await queryPromise;
+    res.status(200).json({ message: "Dado deletado com sucesso!" });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
 
 export const searchDatesWeightsByExercise = async (req, res) => {
-    const { idUser, idExercise } = req.query;
+  const { idUser, idExercise } = req.query;
 
-    try {
-        const queryPromise = new Promise((resolve, reject) => {
-            const sql = `
+  try {
+    const queryPromise = new Promise((resolve, reject) => {
+      const sql = `
                 SELECT 
                     record_weight,
                     record_weight_date
@@ -57,29 +55,34 @@ export const searchDatesWeightsByExercise = async (req, res) => {
                     user_id = ? AND exercise_id = ?
                 ORDER BY record_weight_date DESC
             `;
-            db.query(sql, [idUser, idExercise], (err, result) => err ? reject(err) : resolve(result));
-        });
+      db.query(sql, [idUser, idExercise], (err, result) =>
+        err ? reject(err) : resolve(result),
+      );
+    });
 
-        const result = await queryPromise;
+    const result = await queryPromise;
 
-        const formattedResult = result.map(record => ({
-            ...record,
-            record_weight: `${record.record_weight} kg`,
-            record_weight_date: format(new Date(record.record_weight_date), 'dd/MM/yyyy')
-        }));
+    const formattedResult = result.map((record) => ({
+      ...record,
+      record_weight: `${record.record_weight} kg`,
+      record_weight_date: format(
+        new Date(record.record_weight_date),
+        "dd/MM/yyyy",
+      ),
+    }));
 
-        res.status(200).json({ message: formattedResult });
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-}
+    res.status(200).json({ message: formattedResult });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
 
 export const searchUserData = async (req, res) => {
-    const { idUser } = req.query;
+  const { idUser } = req.query;
 
-    try {
-        const queryPromise = new Promise((resolve, reject) => {
-            const sql = `
+  try {
+    const queryPromise = new Promise((resolve, reject) => {
+      const sql = `
                 SELECT 
                     e.name_exercise,
                     e.id AS id_exercise,
@@ -97,20 +100,24 @@ export const searchUserData = async (req, res) => {
                     wr.user_id = ?
                     ORDER BY wr.record_weight_date DESC
             `;
-            db.query(sql, idUser, (err, result) => err ? reject(err) : resolve(result)
-            );
-        });
+      db.query(sql, idUser, (err, result) =>
+        err ? reject(err) : resolve(result),
+      );
+    });
 
-        const result = await queryPromise;
+    const result = await queryPromise;
 
-        const formattedResult = result.map(record => ({
-            ...record,
-            record_weight: `${record.record_weight} kg`,
-            record_weight_date: format(new Date(record.record_weight_date), 'dd/MM/yyyy')
-        }));
-        
-        res.status(200).json({ message: formattedResult });
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-}
+    const formattedResult = result.map((record) => ({
+      ...record,
+      record_weight: `${record.record_weight} kg`,
+      record_weight_date: format(
+        new Date(record.record_weight_date),
+        "dd/MM/yyyy",
+      ),
+    }));
+
+    res.status(200).json({ message: formattedResult });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
