@@ -15,28 +15,26 @@ const Carousel = ({ children }) => {
   };
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full overflow-hidden">
       <div
-        className="absolute top-1/2 transform -translate-y-1/2 left-4 cursor-pointer"
+        className="absolute top-1/2 transform -translate-y-1/2 left-4 cursor-pointer z-10"
         onClick={prevSlide}
       >
         <IoIosArrowBack className="text-white text-4xl" />
       </div>
       <div
-        className="absolute top-1/2 transform -translate-y-1/2 right-4 cursor-pointer"
+        className="absolute top-1/2 transform -translate-y-1/2 right-4 cursor-pointer z-10"
         onClick={nextSlide}
       >
         <IoIosArrowForward className="text-white text-4xl" />
       </div>
-      <div className="overflow-hidden h-full">
-        <div
-          className="flex transition-transform duration-500 ease-in-out"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-        >
-          {React.Children.map(children, (child, index) => (
-            <div className="w-full flex-shrink-0">{child}</div>
-          ))}
-        </div>
+      <div
+        className="flex transition-transform duration-500 ease-in-out"
+        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+      >
+        {React.Children.map(children, (child, index) => (
+          <div className="w-full flex-shrink-0">{child}</div>
+        ))}
       </div>
     </div>
   );

@@ -177,43 +177,6 @@ const Weights = () => {
     ...new Set(exercises.map((exercise) => exercise.muscle_group_name)),
   ];
 
-  const customStyles = {
-    control: (provided, state) => ({
-      ...provided,
-      backgroundColor: "#1B2735",
-      borderColor: "transparent",
-      boxShadow: "none",
-      color: "white",
-      padding: "0.30rem",
-      cursor: "pointer",
-      "&:hover": {
-        borderColor: "transparent",
-      },
-    }),
-    menu: (provided) => ({
-      ...provided,
-      backgroundColor: "#1B2735",
-      color: "white",
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      cursor: "pointer",
-      backgroundColor: state.isSelected ? "rgba(27, 39, 45)" : "#1B2735",
-      color: "white",
-      "&:hover": {
-        backgroundColor: "rgba(27, 39, 45)",
-      },
-    }),
-    singleValue: (provided) => ({
-      ...provided,
-      color: "white",
-    }),
-    input: (provided) => ({
-      ...provided,
-      color: "#fff",
-    }),
-  };
-
   return (
     <>
       <Header showTabs={true} />
@@ -222,7 +185,9 @@ const Weights = () => {
         className="flex flex-col justify-center items-center"
         style={{ maxHeight: `calc(100vh - 100px)` }}
       >
-        <Title>Registre e lembre dos seus pesos Recordes</Title>
+        <Title className="mt-8 mb-4">
+          Registre e lembre dos seus pesos Recordes
+        </Title>
         <Button
           colorClass="bg-red-500 hover:bg-red-600"
           className="flex items-center mt-8 mb-20"

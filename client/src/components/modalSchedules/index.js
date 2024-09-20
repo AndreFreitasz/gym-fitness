@@ -100,7 +100,7 @@ const ModalSchedules = ({ isOpen, onRequestClose, title, onSubmit }) => {
                 />
               </div>
               <div className="mb-4 flex items-center">
-                <div className="w-1/2 mr-4 flex row justify-center">
+                <div className="w-1/2 mr-4 flex row justify-end">
                   <span className="mr-2 flex items-center text-white text-sm font-semibold">
                     Séries:
                   </span>
@@ -109,9 +109,10 @@ const ModalSchedules = ({ isOpen, onRequestClose, title, onSubmit }) => {
                     id="series"
                     name="series"
                     placeholder="00"
+                    className="w-2/4"
                   />
                 </div>
-                <div className="w-1/2 mr-4 flex row justify-center">
+                <div className="w-1/2 mr-4 flex row justify-start">
                   <span className="mr-2 flex items-center text-white text-sm font-semibold">
                     Repetições:
                   </span>
@@ -120,6 +121,7 @@ const ModalSchedules = ({ isOpen, onRequestClose, title, onSubmit }) => {
                     id="repetitions"
                     name="repetitions"
                     placeholder="00"
+                    className="w-2/4"
                   />
                 </div>
               </div>

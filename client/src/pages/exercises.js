@@ -141,8 +141,8 @@ const Exercises = () => {
         className="flex flex-col lg:flex-row justify-start items-stretch shadow-lg p-6 gap-x-4 gap-y-4 lg:gap-y-0"
         style={{ maxHeight: `calc(100vh - 100px)` }}
       >
-        <div className="w-full rounded-lg flex flex-col items-center relative overflow-hidden sm:max-w-full md:max-w-full lg:w-1/2 lg:bg-gray-500 lg:bg-opacity-20">
-          <Title>Cadastre seus exercícios</Title>
+        <div className="w-full py-12 rounded-lg flex flex-col items-center relative overflow-hidden sm:max-w-full md:max-w-full lg:w-1/2 lg:bg-gray-500 lg:bg-opacity-20">
+          <Title className="my-8">Cadastre seus exercícios</Title>
           <Formik
             initialValues={initialValues}
             validationSchema={schema}
@@ -180,8 +180,8 @@ const Exercises = () => {
             </AnimatedForm>
           </Formik>
         </div>
-        <div className="w-full rounded-lg flex flex-col items-center relative sm:max-w-full md:max-w-full lg:w-1/2 lg:bg-gray-500 lg:bg-opacity-20 overflow-hidden">
-          <Title>Seus exercícios</Title>
+        <div className="w-full rounded-lg py-12 flex flex-col items-center relative sm:max-w-full md:max-w-full lg:w-1/2 lg:bg-gray-500 lg:bg-opacity-20 overflow-hidden">
+          <Title className="my-8">Seus exercícios</Title>
           <div className="flex justify-center w-full h-screen mt-6">
             <div className="overflow-auto rounded-lg w-4/5 max-h-[60vh] scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent custom-scrollbar">
               {message ? (

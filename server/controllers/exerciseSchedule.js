@@ -53,3 +53,45 @@ export const searchDaysOfWeek = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+export const searchExercisesSchedule = async (req, res) => {
+  const { idUser } = req.query;
+
+  try {
+    const queryPromise = new Promise((resolve, reject) => {
+      const sql = `
+        SELECT
+          se.id,
+          e.name_exercise,
+          dow.name AS day_name,
+          se.series,
+          se.repetitions
+        FROM
+          schedule_exercises se
+        INNER JOIN
+          exercises e ON e.id = se.exercise_id
+        INNER JOIN
+          days_of_week dow ON dow.id = se.day_id
+        WHERE
+          se.user_id = ?
+      `;
+      db.query(sql, idUser, (err, result) =>
+        err ? reject(err) : resolve(result),
+      );
+    });
+    const result = await queryPromise;
+
+    const exercisesByDay = result.reduce((acc, exercise) => {
+      const { day_name, name_exercise, series, repetitions } = exercise;
+      if (!acc[day_name]) {
+        acc[day_name] = [];
+      }
+      acc[day_name].push({ name_exercise, series, repetitions });
+      return acc;
+    }, {});
+
+    res.status(200).json({ message: exercisesByDay });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
