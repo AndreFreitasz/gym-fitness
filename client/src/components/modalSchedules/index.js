@@ -13,6 +13,9 @@ Modal.setAppElement("#root");
 
 const schema = Yup.object().shape({
   exercises: Yup.string().required("Campo obrigatório"),
+  daysOfWeek: Yup.string().required("Campo obrigatório"),
+  series: Yup.number().required("Campo obrigatório"),
+  repetitions: Yup.number().required("Campo obrigatório"),
 });
 
 const ModalSchedules = ({ isOpen, onRequestClose, title, onSubmit }) => {

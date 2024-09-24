@@ -19,8 +19,15 @@ export const searchExercises = async (req, res) => {
 
   try {
     const queryPromise = new Promise((resolve, reject) => {
-      const sql =
-        "SELECT * FROM exercises WHERE user_id = ? ORDER BY name_exercise";
+      const sql = `
+        SELECT 
+          * 
+        FROM 
+          exercises 
+        WHERE 
+          user_id = ? 
+        ORDER BY name_exercise
+        `;
       db.query(sql, [idUser], (err, result) =>
         err ? reject(err) : resolve(result),
       );
@@ -37,7 +44,7 @@ export const postExercises = async (req, res) => {
   const { idUser, nameExercise, muscleGroup } = req.body;
 
   try {
-    const checkIfExerciseExists = await exerciseExists(nameExercise);
+    const checkIfExerciseExists = await exerciseExists(nameExercise, idUser);
     if (checkIfExerciseExists) {
       return res.status(400).json({ message: "Exercício já existe!" });
     }
@@ -61,25 +68,47 @@ export const deleteExercises = async (req, res) => {
   const id = req.body.id;
 
   try {
-    const queryPromise = new Promise((resolve, reject) => {
+    const deleteScheduleReferencesPromise = new Promise((resolve, reject) => {
+      const sql = "DELETE FROM schedule_exercises WHERE exercise_id = ?";
+      db.query(sql, [id], (err, result) =>
+        err ? reject(err) : resolve(result),
+      );
+    });
+    await deleteScheduleReferencesPromise;
+
+    const deleteWeightsReferencesPromise = new Promise((resolve, reject) => {
+      const sql = "DELETE FROM weights_records WHERE exercise_id = ?";
+      db.query(sql, [id], (err, result) =>
+        err ? reject(err) : resolve(result),
+      );
+    });
+    await deleteWeightsReferencesPromise;
+
+    const deleteExercisePromise = new Promise((resolve, reject) => {
       const sql = "DELETE FROM exercises WHERE id = ?";
       db.query(sql, [id], (err, result) =>
         err ? reject(err) : resolve(result),
       );
     });
+    await deleteExercisePromise;
 
-    await queryPromise;
     res.status(200).json({ message: "Exercício deletado com sucesso!" });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 };
 
-export const exerciseExists = async (nameExercise) => {
+export const exerciseExists = async (nameExercise, idUser) => {
   return new Promise((resolve, reject) => {
-    const sql =
-      "SELECT COUNT(*) AS count FROM exercises WHERE name_exercise = ?";
-    db.query(sql, [nameExercise], (err, result) => {
+    const sql = `
+      SELECT COUNT(*) AS count 
+      FROM 
+        exercises 
+      WHERE 
+        name_exercise = ?
+        AND user_id = ?
+    `;
+    db.query(sql, [nameExercise, idUser], (err, result) => {
       if (err) {
         reject(err);
       } else {

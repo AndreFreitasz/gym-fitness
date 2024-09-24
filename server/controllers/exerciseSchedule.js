@@ -82,15 +82,39 @@ export const searchExercisesSchedule = async (req, res) => {
     const result = await queryPromise;
 
     const exercisesByDay = result.reduce((acc, exercise) => {
-      const { day_name, name_exercise, series, repetitions } = exercise;
+      const { day_name, id, name_exercise, series, repetitions } = exercise;
       if (!acc[day_name]) {
         acc[day_name] = [];
       }
-      acc[day_name].push({ name_exercise, series, repetitions });
+      acc[day_name].push({ id, name_exercise, series, repetitions });
       return acc;
     }, {});
 
     res.status(200).json({ message: exercisesByDay });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+export const deleteExerciseSchedule = async (req, res) => {
+  const { idExerciseSchedule } = req.body;
+
+  try {
+    const deleteScheduleReferencesPromise = new Promise((resolve, reject) => {
+      const sql = `
+        DELETE
+        FROM
+          schedule_exercises
+        WHERE
+          id = ?
+      `;
+      db.query(sql, [idExerciseSchedule], (err, result) =>
+        err ? reject(err) : resolve(result),
+      );
+    });
+    await deleteScheduleReferencesPromise;
+
+    res.status(200).json({ message: "Exercício deletado com sucesso!" });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

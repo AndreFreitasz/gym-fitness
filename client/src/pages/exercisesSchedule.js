@@ -7,6 +7,7 @@ import { FaPlus, FaTrash } from "react-icons/fa";
 import ModalSchedules from "../components/modalSchedules/index.js";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import Swal from "sweetalert2";
 
 const ExercisesSchedule = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -62,7 +63,7 @@ const ExercisesSchedule = () => {
       if (response.status === 200) {
         closeModal();
         toast.success("Peso cadastrado com sucesso");
-        searchExercisesSchedule(); // Atualize a lista de exercícios após a inserção
+        searchExercisesSchedule();
       }
     } catch (error) {
       if (error.response && error.response.data.message) {
@@ -73,18 +74,39 @@ const ExercisesSchedule = () => {
     }
   };
 
-  const deleteExercise = async (exerciseId) => {
-    try {
-      await axios.delete(`http://localhost:3001/deleteExercise/${exerciseId}`);
-      toast.success("Exercício deletado com sucesso");
-      searchExercisesSchedule(); // Atualize a lista de exercícios após a exclusão
-    } catch (error) {
-      if (error.response && error.response.data.message) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("Erro ao tentar deletar exercício");
+  const deleteExerciseSchedule = async (idExerciseSchedule) => {
+    Swal.fire({
+      title: "Tem certeza?",
+      text: "Você não poderá reverter isso!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, deletar!",
+      cancelButtonText: "Cancelar",
+      customClass: {
+        popup: "bg-gray-800 text-white",
+        title: "font-bold",
+        confirmButton:
+          "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
+        cancelButton:
+          "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded",
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete("http://localhost:3001/deleteExerciseSchedule", {
+            data: { idExerciseSchedule },
+          });
+          toast.success("Exercício retirado do cronograma");
+          searchExercisesSchedule();
+        } catch (error) {
+          if (error.response && error.response.data.message) {
+            toast.error(error.response.data.message);
+          } else {
+            toast.error("Erro ao tentar deletar exercício");
+          }
+        }
       }
-    }
+    });
   };
 
   return (
@@ -113,19 +135,22 @@ const ExercisesSchedule = () => {
                     <div className="overflow-auto rounded-lg w-4/5 scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent custom-scrollbar">
                       <ul className="flex flex-col w-full mb-16">
                         {exercisesByDay[day] &&
-                          exercisesByDay[day].map((exercise, id) => (
+                          exercisesByDay[day].map((exerciseSchedule, id) => (
                             <li
                               className="text-white text-lg bg-background rounded-md mx-4 p-1 my-1 flex justify-between items-center"
                               key={id}
                             >
                               <span className="flex-grow border-r-2 border-gray-500 pl-6 py-2">
-                                {exercise.name_exercise} - {exercise.series} x{" "}
-                                {exercise.repetitions}
+                                {exerciseSchedule.name_exercise} -{" "}
+                                {exerciseSchedule.series} x{" "}
+                                {exerciseSchedule.repetitions}
                               </span>
                               <div
                                 className=" flex p-4 ml-3 items-center cursor-pointer rounded-md hover:bg-red-500 transition duration-200 ease-in-out"
                                 title="Deletar"
-                                onClick={() => deleteExercise(exercise.id)}
+                                onClick={() =>
+                                  deleteExerciseSchedule(exerciseSchedule.id)
+                                }
                               >
                                 <FaTrash className=" h-full flex-shrink-0" />
                               </div>
